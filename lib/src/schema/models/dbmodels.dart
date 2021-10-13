@@ -10,13 +10,13 @@ class DbModel {
   /// The database id of the model instance
   ///
   /// **Important** : it must be overriden
-  int? id;
+  int id;
 
   /// get the database
-  Db get db => Db();
+  Db get db => null;
 
   /// get the table schema
-  DbTable get table => DbTable('');
+  DbTable get table => null;
 
   /// The database row serializer for the model
   ///
@@ -26,15 +26,15 @@ class DbModel {
   /// The database row deserializer for the model
   ///
   /// **Important** : it must be overriden
-  DbModel fromDb(Map<String, dynamic> map) => DbModel();
+  DbModel fromDb(Map<String, dynamic> map) => null;
 
   /// Select rows in the database table with joins on foreign keys
   Future<List<dynamic>> sqlJoin(
-      {int? offset,
-      int? limit,
-      String? orderBy,
-      String? where,
-      String? groupBy,
+      {int offset,
+      int limit,
+      String orderBy,
+      String where,
+      String groupBy,
       bool verbose = false}) async {
     _checkDbIsReady();
     print("> Sqljoin for table $table");
@@ -52,7 +52,7 @@ class DbModel {
       }
     });
     for (final fkCol in table.foreignKeys) {
-      final fkTable = db.schema.table(fkCol.reference!);
+      final fkTable = db.schema.table(fkCol.reference);
       _joinTables.add(fkTable.name);
       //print("FK COLS $fkTable: ${fkTable.columns}");
       final c = fkTable.columns;
@@ -66,9 +66,9 @@ class DbModel {
         final encodedName = "${fkTable.name}_${_fkTableCol.name}";
         final fk = _EncodedFk(
             table: fkTable,
-            name: _fkTableCol.name!,
+            name: _fkTableCol.name,
             encodedName: encodedName,
-            refColName: fkCol.name!);
+            refColName: fkCol.name);
         _encodedFks.add(fk);
         final encodedFkName = "${fkTable.name}.${fk.name} AS $encodedName";
         _select.add(encodedFkName);
@@ -100,9 +100,9 @@ class DbModel {
           final efk = encodedFk[0];
           //print("EFK $efk");
           if (!fkData.containsKey(efk.refColName)) {
-            fkData[efk.refColName!] = <String, dynamic>{};
+            fkData[efk.refColName] = <String, dynamic>{};
           }
-          fkData[efk.refColName]![efk.name!] = value;
+          fkData[efk.refColName][efk.name] = value;
           //endRow[key][encodedFk[0].refColName] = value;
           //print("FKDATA : $fkData");
         }
@@ -125,18 +125,18 @@ class DbModel {
 
   /// Select rows in the database table
   Future<List<dynamic>> sqlSelect(
-      {String? where,
-      String? orderBy,
-      int? limit,
-      int? offset,
-      String? groupBy,
+      {String where,
+      String orderBy,
+      int limit,
+      int offset,
+      String groupBy,
       bool verbose = false}) async {
     _checkDbIsReady();
     // do not take the foreign keys
     final cols = <String>["id"];
     for (final col in table.columns) {
       if (!col.isForeignKey) {
-        cols.add(col.name!);
+        cols.add(col.name);
       }
     }
     final columns = cols.join(",");
@@ -170,7 +170,7 @@ class DbModel {
   /// Upsert a row in the database table
   Future<void> sqlUpsert(
       {bool verbose = false,
-      String? indexColumn,
+      String indexColumn,
       List<String> preserveColumns = const <String>[]}) async {
     _checkDbIsReady();
     final data = this.toDb();
@@ -213,7 +213,7 @@ class DbModel {
   }
 
   /// Delete an instance from the database
-  Future<void> sqlDelete({String? where, bool verbose = false}) async {
+  Future<void> sqlDelete({String where, bool verbose = false}) async {
     _checkDbIsReady();
     var _where = where;
     if (where == null) {
@@ -228,7 +228,7 @@ class DbModel {
   }
 
   /// Count rows
-  Future<int> sqlCount({String? where, bool verbose = false}) async {
+  Future<int> sqlCount({String where, bool verbose = false}) async {
     final n = db
         .count(table: table.name, where: where, verbose: verbose)
         .catchError((dynamic e) =>
@@ -240,7 +240,7 @@ class DbModel {
     final res = <String, String>{};
     map.forEach((String k, dynamic v) {
       if (v == null) {
-        res[k] = '';
+        res[k] = null;
       } else {
         res[k] = "$v";
       }
@@ -262,10 +262,10 @@ class _EncodedFk {
       @required this.encodedName,
       @required this.refColName});
 
-  final DbTable? table;
-  final String? name;
-  final String? encodedName;
-  final String? refColName;
+  final DbTable table;
+  final String name;
+  final String encodedName;
+  final String refColName;
 
   @override
   String toString() {

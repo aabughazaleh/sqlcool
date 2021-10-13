@@ -49,14 +49,14 @@ class DbTable {
 
   /// Get a column by name
   DbColumn column(String name) {
-    DbColumn? col;
+    DbColumn col;
     for (final c in _columnsData) {
       if (c.name == name) {
         col = c;
         break;
       }
     }
-    return col!;
+    return col;
   }
 
   /// Add an index to a column
@@ -64,11 +64,11 @@ class DbTable {
   /// If a [name] is given the index name will
   /// be set to it, otherwise it is infered from
   /// the column name
-  void index(String column, {String? indexName}) {
+  void index(String column, {String indexName}) {
     var idxName = column;
     switch (indexName != null) {
       case true:
-        idxName = indexName!;
+        idxName = indexName;
         break;
       default:
         idxName = "idx_$column";
@@ -85,10 +85,10 @@ class DbTable {
 
   /// Add a foreign key to a column
   void foreignKey(String name,
-      {String? reference,
+      {String reference,
       bool nullable = false,
       bool unique = false,
-      String? defaultValue,
+      String defaultValue,
       OnDelete onDelete = OnDelete.restrict}) {
     var q = "$name INTEGER";
     if (unique) {
@@ -124,7 +124,7 @@ class DbTable {
         name: name,
         unique: unique,
         nullable: nullable,
-        defaultValue: defaultValue!,
+        defaultValue: defaultValue,
         type: DbColumnType.integer,
         isForeignKey: true,
         reference: reference,
@@ -133,11 +133,11 @@ class DbTable {
 
   /// Add a varchar column
   void varchar(String name,
-      {int? maxLength,
+      {int maxLength,
       bool nullable = false,
       bool unique = false,
-      String? defaultValue,
-      String? check}) {
+      String defaultValue,
+      String check}) {
     var q = "$name VARCHAR";
     if (maxLength != null) {
       q += "($maxLength)";
@@ -159,8 +159,8 @@ class DbTable {
         name: name,
         unique: unique,
         nullable: nullable,
-        defaultValue: defaultValue!,
-        check: check!,
+        defaultValue: defaultValue,
+        check: check,
         type: DbColumnType.varchar));
   }
 
@@ -168,8 +168,8 @@ class DbTable {
   void text(String name,
       {bool nullable = false,
       bool unique = false,
-      String? defaultValue,
-      String? check}) {
+      String defaultValue,
+      String check}) {
     var q = "$name TEXT";
     if (unique) {
       q += " UNIQUE";
@@ -188,8 +188,8 @@ class DbTable {
         name: name,
         unique: unique,
         nullable: nullable,
-        defaultValue: defaultValue!,
-        check: check!,
+        defaultValue: defaultValue,
+        check: check,
         type: DbColumnType.text));
   }
 
@@ -197,8 +197,8 @@ class DbTable {
   void real(String name,
       {bool nullable = false,
       bool unique = false,
-      double? defaultValue,
-      String? check}) {
+      double defaultValue,
+      String check}) {
     var q = "$name REAL";
     if (unique) {
       q += " UNIQUE";
@@ -218,7 +218,7 @@ class DbTable {
         unique: unique,
         nullable: nullable,
         defaultValue: "$defaultValue",
-        check: check!,
+        check: check,
         type: DbColumnType.real));
   }
 
@@ -227,8 +227,8 @@ class DbTable {
     String name, {
     bool nullable = false,
     bool unique = false,
-    int? defaultValue,
-    String? check,
+    int defaultValue,
+    String check,
   }) {
     var q = "$name INTEGER";
     if (unique) {
@@ -249,12 +249,12 @@ class DbTable {
         unique: unique,
         nullable: nullable,
         defaultValue: "$defaultValue",
-        check: check!,
+        check: check,
         type: DbColumnType.integer));
   }
 
   /// Add a float column
-  void boolean(String name, {@required bool? defaultValue}) {
+  void boolean(String name, {@required bool defaultValue}) {
     var q = "$name BOOLEAN";
     q += " DEFAULT $defaultValue";
     _columns.add(q);
@@ -267,8 +267,8 @@ class DbTable {
     String name, {
     bool nullable = false,
     bool unique = false,
-    Uint8List? defaultValue,
-    String? check,
+    Uint8List defaultValue,
+    String check,
   }) {
     var q = "$name BLOB";
     if (unique) {
@@ -289,7 +289,7 @@ class DbTable {
         unique: unique,
         nullable: nullable,
         defaultValue: "$defaultValue",
-        check: check!,
+        check: check,
         type: DbColumnType.blob));
   }
 

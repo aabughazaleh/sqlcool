@@ -30,14 +30,14 @@ class SelectBloc {
       this.reactive = false,
       this.verbose = false})
       : assert(database != null),
-        assert(database!.isReady) {
+        assert(database.isReady) {
     if ((query == null) && (table == null)) {
       throw ArgumentError("Please provide either a table or a query argument");
     }
 
     _getItems();
     if (reactive) {
-      _changefeed = database!.changefeed.listen((change) {
+      _changefeed = database.changefeed.listen((change) {
         if ((table != null && change.table == table) ||
             (query != null && change.query == query)) {
           _getItems();
@@ -50,34 +50,34 @@ class SelectBloc {
   }
 
   /// The database
-  final Db? database;
+  final Db database;
 
   /// The table name
-  final String? table;
+  final String table;
 
   /// The query, which if used, will ignore all else statements
-  final String? query;
+  final String query;
 
   /// Offset sql statement
-  int? offset;
+  int offset;
 
   /// Limit sql statement
-  int? limit;
+  int limit;
 
   /// Order by sql statement
-  String? orderBy;
+  String orderBy;
 
   /// Select sql statement
-  String? columns;
+  String columns;
 
   /// Where sql statement
-  String? where;
+  String where;
 
   /// The join sql statement
-  String? joinTable;
+  String joinTable;
 
   /// The on sql statement
-  String? joinOn;
+  String joinOn;
 
   /// The reactivity of the bloc. Will send new values in [items]
   /// when something changes in the database if set to true
@@ -86,7 +86,7 @@ class SelectBloc {
   /// The verbosity
   bool verbose;
 
-  StreamSubscription? _changefeed;
+  StreamSubscription _changefeed;
   final _itemController =
       StreamController<List<Map<String, dynamic>>>.broadcast();
   bool _changefeedIsActive = true;
@@ -106,7 +106,7 @@ class SelectBloc {
   void dispose() {
     _itemController.close();
     if (reactive) {
-      _changefeed!.cancel();
+      _changefeed.cancel();
       _changefeedIsActive = false;
     }
   }
@@ -123,26 +123,26 @@ class SelectBloc {
 
     try {
       if (query != null) {
-        res = await database!.query(query!, verbose: verbose);
+        res = await database.query(query, verbose: verbose);
       } else if (joinTable != null) {
-        res = await database!.join(
-            table: table!,
-            columns: columns!,
-            joinTable: joinTable!,
-            joinOn: joinOn!,
-            offset: offset!,
-            limit: limit!,
-            where: where!,
-            orderBy: orderBy!,
+        res = await database.join(
+            table: table,
+            columns: columns,
+            joinTable: joinTable,
+            joinOn: joinOn,
+            offset: offset,
+            limit: limit,
+            where: where,
+            orderBy: orderBy,
             verbose: verbose);
       } else {
-        res = await database!.select(
-            table: table!,
-            columns: columns!,
-            offset: offset!,
-            limit: limit!,
-            where: where!,
-            orderBy: orderBy!,
+        res = await database.select(
+            table: table,
+            columns: columns,
+            offset: offset,
+            limit: limit,
+            where: where,
+            orderBy: orderBy,
             verbose: verbose);
       }
     } catch (e) {

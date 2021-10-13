@@ -61,10 +61,10 @@ class DbColumn {
       this.onDelete});
 
   /// The column name
-  final String? name;
+  final String name;
 
   /// The data type of the column
-  final DbColumnType? type;
+  final DbColumnType type;
 
   /// Is the column unique
   final bool unique;
@@ -73,19 +73,19 @@ class DbColumn {
   final bool nullable;
 
   /// The column-s default value
-  final String? defaultValue;
+  final String defaultValue;
 
   /// A check constraint
-  final String? check;
+  final String check;
 
   /// If the column is a foreign key
   final bool isForeignKey;
 
   /// A foreign key table name reference
-  final String? reference;
+  final String reference;
 
   /// The on delete constraint on a foreign key
-  final OnDelete? onDelete;
+  final OnDelete onDelete;
 
   /// print a description of the schema
   String describe({String spacer = "", bool isPrint = true}) {
@@ -112,8 +112,8 @@ class DbColumn {
 
   /// convert a column type to a string
   String typeToString() {
-    String? res = "";
-    switch (type!) {
+    String res;
+    switch (type) {
       case DbColumnType.varchar:
         res = "varchar";
         break;

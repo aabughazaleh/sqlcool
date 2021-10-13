@@ -28,10 +28,10 @@ class SqlSelectBloc {
       this.reactive = false,
       this.verbose = false})
       : assert(database != null),
-        assert(database!.isReady) {
+        assert(database.isReady) {
     _getItems();
     if (reactive) {
-      _changefeed = database!.changefeed.listen((change) {
+      _changefeed = database.changefeed.listen((change) {
         if (table != null && change.table == table) {
           _getItems();
         }
@@ -43,31 +43,31 @@ class SqlSelectBloc {
   }
 
   /// The database
-  final SqlDb? database;
+  final SqlDb database;
 
   /// The table name
-  final String? table;
+  final String table;
 
   /// Offset sql statement
-  int? offset;
+  int offset;
 
   /// Limit sql statement
-  int? limit;
+  int limit;
 
   /// Order by sql statement
-  String? orderBy;
+  String orderBy;
 
   /// Select sql statement
-  String? columns;
+  String columns;
 
   /// Where sql statement
-  String? where;
+  String where;
 
   /// The join sql statement
-  String? joinTable;
+  String joinTable;
 
   /// The on sql statement
-  String? joinOn;
+  String joinOn;
 
   /// The reactivity of the bloc. Will send new values in [items]
   /// when something changes in the database if set to true
@@ -76,7 +76,7 @@ class SqlSelectBloc {
   /// The verbosity
   bool verbose;
 
-  StreamSubscription? _changefeed;
+  StreamSubscription _changefeed;
   final _rowsController = StreamController<List<DbRow>>.broadcast();
   bool _changefeedIsActive = true;
 
@@ -93,7 +93,7 @@ class SqlSelectBloc {
   void dispose() {
     _rowsController.close();
     if (reactive) {
-      _changefeed!.cancel();
+      _changefeed.cancel();
       _changefeedIsActive = false;
     }
   }
@@ -102,24 +102,24 @@ class SqlSelectBloc {
     final rows = <DbRow>[];
     try {
       if (joinTable != null) {
-        rows.addAll(await database!.join(
-            table: table!,
-            columns: columns!,
-            joinTable: joinTable!,
-            joinOn: joinOn!,
-            offset: offset!,
-            limit: limit!,
-            where: where!,
-            orderBy: orderBy!,
+        rows.addAll(await database.join(
+            table: table,
+            columns: columns,
+            joinTable: joinTable,
+            joinOn: joinOn,
+            offset: offset,
+            limit: limit,
+            where: where,
+            orderBy: orderBy,
             verbose: verbose));
       } else {
-        rows.addAll(await database!.select(
-            table: table!,
-            columns: columns!,
-            offset: offset!,
-            limit: limit!,
-            where: where!,
-            orderBy: orderBy!,
+        rows.addAll(await database.select(
+            table: table,
+            columns: columns,
+            offset: offset,
+            limit: limit,
+            where: where,
+            orderBy: orderBy,
             verbose: verbose));
       }
     } catch (e) {

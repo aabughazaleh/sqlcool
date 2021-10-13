@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-Directory? directory;
+Directory directory;
 const MethodChannel channel = MethodChannel('com.tekartik.sqflite');
 final List<MethodCall> log = <MethodCall>[];
 bool setupDone = false;
@@ -14,13 +14,13 @@ Future<void> setup() async {
   }
   directory = await Directory.systemTemp.createTemp();
 
-  String? response;
+  String response;
   channel.setMethodCallHandler((MethodCall methodCall) async {
     //print("METHOD CALL: $methodCall");
     log.add(methodCall);
     switch (methodCall.method) {
       case "getDatabasesPath":
-        return directory!.path;
+        return directory.path;
         break;
       case "insert":
         return 1;
@@ -96,6 +96,6 @@ Future<void> setup() async {
           return res;
         }
     }
-    return response!;
+    return response;
   });
 }

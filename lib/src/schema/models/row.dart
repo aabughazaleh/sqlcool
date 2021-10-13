@@ -73,7 +73,7 @@ class DbRecord<T> {
         }
         break;
     }
-    return DbRecord<bool>(key, false);
+    return null;
   }
 
   @override
@@ -103,7 +103,7 @@ class DbRow {
           recs.add(DbRecord<dynamic>(key, value));
         } else {
           //print("COL ${col.name} ${col.type}");
-          switch (col.type!) {
+          switch (col.type) {
             case DbColumnType.varchar:
               recs.add(DbRecord<String>(key, value.toString()));
               break;
@@ -171,7 +171,7 @@ class DbRow {
   /// Get a record value
   T record<T>(String key) {
     final rec = records.firstWhere((r) => r.key == key);
-    T? res;
+    T res;
     if (rec != null) {
       print("REC $rec");
       try {
@@ -186,7 +186,7 @@ class DbRow {
         throw Exception("Type error for record $key : $e");
       }
     }
-    return res!;
+    return res;
   }
 
   /// Convert to a map

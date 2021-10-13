@@ -28,28 +28,28 @@ class DatabaseChangeEvent {
   });
 
   /// Type of the change
-  final DatabaseChange? type;
+  final DatabaseChange type;
 
   /// Change value: number of items affected
-  final int? value;
+  final int value;
 
   /// The query that made the changes
-  final String? query;
+  final String query;
 
   /// The query execution time
-  final num? executionTime;
+  final num executionTime;
 
   /// The table where the changes occur
-  final String? table;
+  final String table;
 
   /// The data manipulated by the query
-  final Map<String, String>? data;
+  final Map<String, String> data;
 
   /// Human readable format
   @override
   String toString() {
     var s = "";
-    if (value! > 1) {
+    if (value > 1) {
       s = "s";
     }
     var msg = "";
