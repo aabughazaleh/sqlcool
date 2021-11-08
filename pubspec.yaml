@@ -22,7 +22,7 @@ dependencies:
   flutter:
     sdk: flutter
   extra_pedantic: ^1.5.0
-  path_provider: ^2.0.5
+  path_provider: ^2.0.6
   pedantic: ^1.11.1
   sqflite: ^2.0.0+4
   synchronized: ^3.0.0
